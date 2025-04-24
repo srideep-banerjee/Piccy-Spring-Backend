@@ -19,6 +19,7 @@ public class PiccyApplication {
 					.toFile();
 			if (!dbFile.exists() && !dbFile.createNewFile())
 				throw new IOException("Couldn't create config database");
+			Files.createDirectories(Path.of("media"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
