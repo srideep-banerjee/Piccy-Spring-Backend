@@ -20,10 +20,31 @@ public class PiccyApplication {
 			if (!dbFile.exists() && !dbFile.createNewFile())
 				throw new IOException("Couldn't create config database");
 			Files.createDirectories(Path.of("media"));
+			cleanupRedundantBinaries();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         SpringApplication.run(PiccyApplication.class, args);
 	}
 
+	private static void cleanupRedundantBinaries() {
+		File file = new File("sqlite");
+		File[] lockFiles = file.listFiles((dir, name) -> name.endsWith(".lck"));
+        assert lockFiles != null;
+		boolean first = true;
+
+        for (File lockFile: lockFiles) {
+			if (lockFile.delete()) {
+				if (first) {
+					first = false;
+					continue;
+				}
+
+				String path = lockFile.getPath();
+				path = path.substring(0, path.lastIndexOf(".lck"));
+				File binaryFile = new File(path);
+				binaryFile.delete();
+			}
+		}
+	}
 }
