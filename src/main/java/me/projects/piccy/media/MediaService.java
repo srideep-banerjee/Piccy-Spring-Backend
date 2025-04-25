@@ -12,8 +12,6 @@ public class MediaService {
 
     public UUID saveFile(MultipartFile inputFile) throws IOException {
 
-        System.out.println("Content type = " + inputFile.getContentType());
-
         String fileName = inputFile.getOriginalFilename();
         assert fileName != null;
 

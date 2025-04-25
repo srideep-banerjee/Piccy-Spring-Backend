@@ -1,6 +1,7 @@
 package me.projects.piccy.media;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,10 @@ public class MediaController {
     ResponseEntity<byte[]> getMedia(@PathVariable UUID mediaId) {
         try {
             byte[] fileData = mediaService.retrieveFile(mediaId);
-            return ResponseEntity.ok(fileData);
+            return ResponseEntity
+                    .accepted()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(fileData);
 
         } catch (FileNotFoundException e) {
             return ResponseEntity.notFound().build();
