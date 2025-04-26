@@ -7,15 +7,46 @@ import jakarta.persistence.*;
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    private Integer id;
+    private Long id;
+
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @Column(name = "creator", nullable = false, updatable = false)
-    private String creator;
+    private Long creator;
 
-    @Column(name = "url", updatable = false)
+    @Column(name = "url", nullable = false,  updatable = false)
     private String url;
 
-    private Integer likes;
+    private Long likes = 0L;
+
+    public Post(String title, Long creator, String url) {
+        this.title = title;
+        this.creator = creator;
+        this.url = url;
+    }
+
+    public Post() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Long getLikes() {
+        return likes;
+    }
 }

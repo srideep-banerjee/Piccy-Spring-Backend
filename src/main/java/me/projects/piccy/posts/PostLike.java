@@ -12,11 +12,18 @@ public class PostLike implements Serializable {
 
     @Id
     @Column(name = "post_id")
-    private Integer postId;
+    private Long postId;
 
     @Id
     @Column(name = "liker_id")
-    private Integer likerId;
+    private Long likerId;
+
+    PostLike(Long postId, Long likerId) {
+        this.postId = postId;
+        this.likerId = likerId;
+    }
+
+    PostLike() {}
 
     @Override
     public final boolean equals(Object o) {
