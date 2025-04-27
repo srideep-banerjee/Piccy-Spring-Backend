@@ -63,5 +63,8 @@ public class PostService {
         }
 
         postRepository.deleteById(postId);
+
+        UUID uuid = UUID.fromString(post.getUrl().substring(7));
+        mediaService.deleteFile(uuid);
     }
 }

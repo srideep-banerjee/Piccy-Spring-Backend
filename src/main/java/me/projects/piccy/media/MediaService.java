@@ -44,6 +44,10 @@ public class MediaService {
         }
     }
 
+    public boolean deleteFile(UUID uuid) {
+        return getFileFromUUID(uuid).delete();
+    }
+
     private File getFileFromUUID(UUID uuid) {
         return Path.of("media", "pic-" + uuid + ".jpeg").toAbsolutePath().toFile();
     }
