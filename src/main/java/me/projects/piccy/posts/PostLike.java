@@ -11,11 +11,13 @@ import java.util.Objects;
 public class PostLike implements Serializable {
 
     @Id
-    @Column(name = "post_id")
+    @Column(name = "post_id", nullable = false, updatable = false,
+            columnDefinition = "references posts(post_id) on delete cascade")
     private Long postId;
 
     @Id
-    @Column(name = "liker_id")
+    @Column(name = "liker_id", nullable = false, updatable = false,
+            columnDefinition = "references users(user_id) on delete cascade")
     private Long likerId;
 
     PostLike(Long postId, Long likerId) {
