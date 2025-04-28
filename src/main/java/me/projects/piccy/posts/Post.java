@@ -1,6 +1,11 @@
 package me.projects.piccy.posts;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "posts")
@@ -21,7 +26,13 @@ public class Post {
     @Column(name = "url", nullable = false,  updatable = false)
     private String url;
 
+    @ColumnDefault("0")
     private Long likes = 0L;
+
+    @CreationTimestamp
+    @ColumnDefault("current_timestamp")
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt = Timestamp.from(Instant.now());
 
     public Post(String title, Long creator, String url) {
         this.title = title;
@@ -49,5 +60,9 @@ public class Post {
 
     public Long getLikes() {
         return likes;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 }
