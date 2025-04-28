@@ -2,6 +2,8 @@ package me.projects.piccy.posts;
 
 import me.projects.piccy.auth.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(path = "/posts")
@@ -35,6 +40,35 @@ public class PostController {
         return ResponseEntity.ok(postService.retrievePost(postId));
     }
 
+    @GetMapping("/list")
+    ResponseEntity<List<Post>> listPosts(@RequestParam Map<String, String> sortOrders) {
+        List<Sort.Order> orders = new ArrayList<>();
+
+        for (var entry: sortOrders.entrySet()) {
+            PostSortOrder postSortOrder;
+
+            try {
+                postSortOrder = PostSortOrder.valueOf(entry.getValue());
+            } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "query value must be ASC or DESC");
+            }
+
+            switch (postSortOrder) {
+                case ASC -> orders.add(Sort.Order.asc(entry.getKey()));
+                case DESC -> orders.add(Sort.Order.desc(entry.getKey()));
+            }
+        }
+
+        try {
+            return ResponseEntity.ok(postService.getPosts(Sort.by(orders)));
+        } catch (PropertyReferenceException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Unknown property: " + e.getPropertyName()
+            );
+        }
+    }
+
     @PutMapping("/toggleLike/{postId}")
     public ResponseEntity<Boolean> toggleLike(@PathVariable Long postId, @AuthenticationPrincipal UserEntity userEntity) {
         return ResponseEntity.ok(postService.togglePostLike(postId, userEntity));
@@ -45,4 +79,8 @@ public class PostController {
         postService.deletePost(postId, userEntity);
         return ResponseEntity.ok("Request Accepted");
     }
+}
+
+enum PostSortOrder {
+    ASC, DESC
 }

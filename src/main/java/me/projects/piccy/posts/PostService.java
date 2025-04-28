@@ -5,10 +5,12 @@ import me.projects.piccy.media.MediaService;
 import me.projects.piccy.posts.likes.PostLike;
 import me.projects.piccy.posts.likes.PostLikesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -68,5 +70,9 @@ public class PostService {
 
         UUID uuid = UUID.fromString(post.getUrl().substring(7));
         mediaService.deleteFile(uuid);
+    }
+
+    List<Post> getPosts(Sort sort) {
+        return postRepository.findAll(sort);
     }
 }
