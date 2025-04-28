@@ -20,7 +20,7 @@ public class PostService {
     private PostRepository postRepository;
 
     @Autowired
-    private PostLikesRepositories postLikesRepository;
+    private PostLikesRepository postLikesRepository;
 
     Post createPost(String title, UserEntity user, MultipartFile inputFile) throws IOException {
         UUID uuid = mediaService.saveFile(inputFile);
