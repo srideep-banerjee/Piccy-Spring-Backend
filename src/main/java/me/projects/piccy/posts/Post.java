@@ -15,7 +15,7 @@ public class Post {
     private String title;
 
     @Column(name = "creator", nullable = false, updatable = false,
-            columnDefinition = "references users(user_id) on delete cascade")
+            columnDefinition = "integer references users(user_id) on delete cascade")
     private Long creator;
 
     @Column(name = "url", nullable = false,  updatable = false)
