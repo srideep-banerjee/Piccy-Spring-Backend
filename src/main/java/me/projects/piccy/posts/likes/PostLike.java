@@ -1,4 +1,4 @@
-package me.projects.piccy.posts;
+package me.projects.piccy.posts.likes;
 
 import jakarta.persistence.*;
 
@@ -20,7 +20,7 @@ public class PostLike implements Serializable {
             columnDefinition = "integer references users(user_id) on delete cascade")
     private Long likerId;
 
-    PostLike(Long postId, Long likerId) {
+    public PostLike(Long postId, Long likerId) {
         this.postId = postId;
         this.likerId = likerId;
     }

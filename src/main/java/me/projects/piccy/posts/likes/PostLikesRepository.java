@@ -1,4 +1,4 @@
-package me.projects.piccy.posts;
+package me.projects.piccy.posts.likes;
 
 import org.springframework.data.repository.CrudRepository;
 
