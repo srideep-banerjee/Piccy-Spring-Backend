@@ -1,6 +1,8 @@
 package me.projects.piccy.posts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import me.projects.piccy.auth.UserEntity;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -18,6 +20,11 @@ public class Post {
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    @JsonIgnore
+    @ManyToOne(targetEntity = UserEntity.class, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "creator", insertable = false, updatable = false)
+    private UserEntity creatorUser;
 
     @Column(name = "creator", nullable = false, updatable = false,
             columnDefinition = "integer references users(user_id) on delete cascade")
@@ -64,5 +71,9 @@ public class Post {
 
     public Timestamp getCreatedAt() {
         return createdAt;
+    }
+
+    public PostAndUserDTO toDto() {
+        return new PostAndUserDTO(id, title, url, createdAt.toInstant(), creatorUser.toDto());
     }
 }

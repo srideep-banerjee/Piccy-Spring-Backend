@@ -15,6 +15,7 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+    @Access(AccessType.PROPERTY)
     private Long userId;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -22,6 +23,9 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "pfp")
+    private String pfp;
 
     public UserEntity() {
     }
@@ -50,15 +54,19 @@ public class UserEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority("USER"));
     }
 
+    public String getPfp() {
+        return pfp;
+    }
+
     public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPfp(String pfp) {
+        this.pfp = pfp;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public UserDTO toDto() {
+        return new UserDTO(userId, username, pfp);
     }
 }

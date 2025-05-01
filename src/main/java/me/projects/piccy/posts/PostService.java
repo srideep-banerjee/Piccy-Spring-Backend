@@ -35,10 +35,11 @@ public class PostService {
         return post;
     }
 
-    Post retrievePost(Long postId) {
-        return postRepository
+    PostAndUserDTO retrievePost(Long postId) {
+        return  postRepository
                 .findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId));
+                .orElseThrow(() -> new PostNotFoundException(postId))
+                .toDto();
     }
 
     boolean togglePostLike(Long postId, UserEntity user) {
@@ -72,7 +73,7 @@ public class PostService {
         mediaService.deleteFile(uuid);
     }
 
-    List<Post> getPosts(Sort sort) {
-        return postRepository.findAll(sort);
+    List<PostAndUserDTO> getPosts(Sort sort) {
+        return postRepository.findAll(sort).stream().map(Post::toDto).toList();
     }
 }

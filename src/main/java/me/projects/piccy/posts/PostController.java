@@ -36,12 +36,12 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> fetchPost(@PathVariable Long postId) {
+    public ResponseEntity<PostAndUserDTO> fetchPost(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.retrievePost(postId));
     }
 
     @GetMapping("/list")
-    ResponseEntity<List<Post>> listPosts(@RequestParam Map<String, String> sortOrders) {
+    ResponseEntity<List<PostAndUserDTO>> listPosts(@RequestParam Map<String, String> sortOrders) {
         List<Sort.Order> orders = new ArrayList<>();
 
         for (var entry: sortOrders.entrySet()) {
