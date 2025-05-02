@@ -2,6 +2,8 @@ package me.projects.piccy.posts;
 
 import me.projects.piccy.auth.UserEntity;
 import me.projects.piccy.media.MediaService;
+import me.projects.piccy.posts.exception.PostCreatorMismatchException;
+import me.projects.piccy.posts.exception.PostNotFoundException;
 import me.projects.piccy.posts.likes.PostLike;
 import me.projects.piccy.posts.likes.PostLikesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
