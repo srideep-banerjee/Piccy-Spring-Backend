@@ -2,15 +2,28 @@ package me.projects.piccy.posts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import me.projects.piccy.auth.UserEntity;
+import me.projects.piccy.profile.Profile;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
 @Table(name = "posts")
+@NamedEntityGraph(
+        name = "Post.creator",
+        attributeNodes = @NamedAttributeNode(
+                value = "creatorProfile",
+                subgraph = "creatorProfile.idToName"
+        ),
+        subgraphs = @NamedSubgraph(
+                name = "creatorProfile.idToName",
+                attributeNodes = @NamedAttributeNode("idToName")
+        )
+)
 public class Post {
 
     @Id
@@ -22,12 +35,13 @@ public class Post {
     private String title;
 
     @JsonIgnore
-    @ManyToOne(targetEntity = UserEntity.class, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Profile.class, cascade = CascadeType.REMOVE)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "creator", insertable = false, updatable = false)
-    private UserEntity creatorUser;
+    private Profile creatorProfile;
 
     @Column(name = "creator", nullable = false, updatable = false,
-            columnDefinition = "integer references users(user_id) on delete cascade")
+            columnDefinition = "integer references profiles(user_id) on delete cascade")
     private Long creator;
 
     @Column(name = "url", nullable = false,  updatable = false)
@@ -74,6 +88,6 @@ public class Post {
     }
 
     public PostAndUserDTO toDto() {
-        return new PostAndUserDTO(id, title, url, createdAt.toInstant(), creatorUser.toDto());
+        return new PostAndUserDTO(id, title, url, createdAt.toInstant(), creatorProfile.toDto());
     }
 }

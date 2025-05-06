@@ -1,5 +1,8 @@
 package me.projects.piccy.auth;
 
+import me.projects.piccy.common.id_to_name.UserIdToName;
+import me.projects.piccy.common.id_to_name.UserIdToNameRepository;
+import me.projects.piccy.profile.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,10 +18,22 @@ public class AuthUserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserIdToNameRepository userIdToNameRepository;
+
+    @Autowired
+    private ProfileService profileService;
+
     public void register(String userName, String password) {
-        UserEntity user = new UserEntity(userName, passwordEncoder.encode(password));
+
+        UserIdToName userIdToName = new UserIdToName(userName);
+        userIdToName = userIdToNameRepository.save(userIdToName);
+
+        UserEntity user = new UserEntity(userIdToName, passwordEncoder.encode(password));
 
         userRepository.save(user);
+
+        profileService.createProfile(userIdToName,null);
     }
 
 

@@ -1,6 +1,9 @@
 package me.projects.piccy.auth;
 
 import jakarta.persistence.*;
+import me.projects.piccy.common.id_to_name.UserIdToName;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,30 +16,28 @@ import java.util.List;
 public class UserEntity implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    @Access(AccessType.PROPERTY)
+    @Column(name = "user_id", columnDefinition = "integer references user_id_to_name(user_id) on delete cascade on update cascade")
     private Long userId;
 
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
+    @OneToOne(targetEntity = UserIdToName.class, cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    @Fetch(FetchMode.JOIN)
+    @PrimaryKeyJoinColumn(name = "user_id")
+    private UserIdToName idToName;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "pfp")
-    private String pfp;
-
     public UserEntity() {
     }
 
-    public UserEntity(String username, String password) {
-        this.username = username;
+    public UserEntity(UserIdToName idToName, String password) {
+        this.idToName = idToName;
+        this.userId = idToName.getUserId();
         this.password = password;
     }
 
     public Long getUserId() {
-        return userId;
+        return idToName.getUserId();
     }
 
     @Override
@@ -46,27 +47,11 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return idToName.getUsername();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
-    }
-
-    public String getPfp() {
-        return pfp;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setPfp(String pfp) {
-        this.pfp = pfp;
-    }
-
-    public UserDTO toDto() {
-        return new UserDTO(userId, username, pfp);
     }
 }
