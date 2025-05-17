@@ -1,5 +1,6 @@
 package me.projects.piccy.posts;
 
+import me.projects.piccy.media.MediaException;
 import me.projects.piccy.posts.exception.PostCreatorMismatchException;
 import me.projects.piccy.posts.exception.PostNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,11 @@ class PostControllerAdvice {
     @ExceptionHandler(value = {ResponseStatusException.class})
     ResponseEntity<Map<String, String>> handleResponseStatusException(ResponseStatusException e) {
         return new ResponseEntity<>(getErrorPayload(e.getReason()), e.getStatusCode());
+    }
+
+    @ExceptionHandler(value = {MediaException.class})
+    ResponseEntity<Map<String, String>> handleMediaException(MediaException e) {
+        return new ResponseEntity<>(getErrorPayload(e.getMessage()), HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     Map<String, String> getErrorPayload(String body) {

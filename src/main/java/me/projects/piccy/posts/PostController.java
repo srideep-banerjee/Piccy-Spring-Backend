@@ -1,6 +1,7 @@
 package me.projects.piccy.posts;
 
 import me.projects.piccy.auth.UserEntity;
+import me.projects.piccy.media.MediaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.PropertyReferenceException;
@@ -25,7 +26,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/create")
-    public ResponseEntity<Post> createPost(@RequestPart String title, @RequestPart MultipartFile postFile, @AuthenticationPrincipal UserEntity userEntity) {
+    public ResponseEntity<Post> createPost(@RequestPart String title, @RequestPart MultipartFile postFile, @AuthenticationPrincipal UserEntity userEntity) throws MediaException {
 
         try {
             Post result = postService.createPost(title, userEntity, postFile);

@@ -1,6 +1,7 @@
 package me.projects.piccy.posts;
 
 import me.projects.piccy.auth.UserEntity;
+import me.projects.piccy.media.MediaException;
 import me.projects.piccy.media.MediaService;
 import me.projects.piccy.posts.exception.PostCreatorMismatchException;
 import me.projects.piccy.posts.exception.PostNotFoundException;
@@ -28,7 +29,7 @@ public class PostService {
     @Autowired
     private PostLikesRepository postLikesRepository;
 
-    Post createPost(String title, UserEntity user, MultipartFile inputFile) throws IOException {
+    Post createPost(String title, UserEntity user, MultipartFile inputFile) throws IOException, MediaException {
         UUID uuid = mediaService.saveFile(inputFile);
         String url = "/media/" + uuid;
 

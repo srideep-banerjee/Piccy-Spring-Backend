@@ -1,5 +1,6 @@
 package me.projects.piccy.media;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,10 +11,17 @@ import java.util.UUID;
 @Service
 public class MediaService {
 
-    public UUID saveFile(MultipartFile inputFile) throws IOException {
+    @Value("${media.maxsize}")
+    private Long maxSize;
+
+    public UUID saveFile(MultipartFile inputFile) throws IOException, MediaException {
 
         String fileName = inputFile.getOriginalFilename();
         assert fileName != null;
+
+        if (inputFile.getSize() > maxSize) {
+            throw new MediaException("File size can't be greater than 5MB");
+        }
 
         UUID uuid;
         File f;
