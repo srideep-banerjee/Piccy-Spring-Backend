@@ -31,7 +31,7 @@ public class PostService {
 
     Post createPost(String title, UserEntity user, MultipartFile inputFile) throws IOException, MediaException {
         UUID uuid = mediaService.saveFile(inputFile);
-        String url = "/media/" + uuid;
+        String url = mediaService.getUrlFromUUID(uuid);
 
         Post post = new Post(title, user.getUserId(), url);
         post = postRepository.save(post);

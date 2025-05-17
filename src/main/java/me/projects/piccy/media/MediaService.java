@@ -37,6 +37,10 @@ public class MediaService {
         return uuid;
     }
 
+    public String getUrlFromUUID(UUID mediaId) {
+        return "/media/" + mediaId;
+    }
+
     byte[] retrieveFile(UUID uuid) throws FileNotFoundException {
 
         File requestedFile = getFileFromUUID(uuid);
