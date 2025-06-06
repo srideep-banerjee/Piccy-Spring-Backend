@@ -88,6 +88,6 @@ public class Post {
     }
 
     public PostAndUserDTO toDto() {
-        return new PostAndUserDTO(id, title, url, createdAt.toInstant(), creatorProfile.toDto());
+        return new PostAndUserDTO(id, title, url, createdAt.toInstant(), likes, creatorProfile.toDto());
     }
 }
