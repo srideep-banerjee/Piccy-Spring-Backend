@@ -24,12 +24,12 @@ public class AuthConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("posts/create", "posts/toggleLike/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "posts/*").authenticated()
-                        .requestMatchers("alive").authenticated()
+                        .requestMatchers("api/posts/create", "api/posts/toggleLike/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "api/posts/*").authenticated()
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(config -> config
+                        .loginProcessingUrl("/api/login")
                         .loginPage("/login")
                         .successHandler(
                                 (request, response, authentication) -> response.sendRedirect("/")
@@ -41,7 +41,7 @@ public class AuthConfig {
                                 }
                         )
                 )
-                .logout(Customizer.withDefaults())
+                .logout(config -> config.logoutUrl("/api/logout"))
                 .build();
     }
 

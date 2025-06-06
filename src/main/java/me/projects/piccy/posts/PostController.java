@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(path = "/posts")
+@RequestMapping(path = "/api/posts")
 public class PostController {
 
     @Autowired
