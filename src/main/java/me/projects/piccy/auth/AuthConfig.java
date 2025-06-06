@@ -2,6 +2,7 @@ package me.projects.piccy.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,13 +24,10 @@ public class AuthConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("login*").permitAll()
-                        .requestMatchers("signup*").permitAll()
-                        .requestMatchers("html-pages/**").permitAll()
-                        .requestMatchers("Icons/*").permitAll()
-                        .requestMatchers("images/*").permitAll()
-                        .requestMatchers("error").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("posts/create", "posts/toggleLike/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "posts/*").authenticated()
+                        .requestMatchers("alive").authenticated()
+                        .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(config -> config
                         .loginPage("/login")

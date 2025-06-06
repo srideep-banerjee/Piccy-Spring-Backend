@@ -18,7 +18,7 @@ public class AuthController {
 
     @GetMapping("/signup")
     public String showRegistrationForm() {
-        return "forward:/html-pages/signup.html";
+        return "index.html";
     }
 
     @PostMapping("/signup")
@@ -32,6 +32,6 @@ public class AuthController {
 
     @GetMapping("/login")
     public String showLoginForm() {
-        return "forward:/html-pages/login.html";
+        return "index.html";
     }
 }
