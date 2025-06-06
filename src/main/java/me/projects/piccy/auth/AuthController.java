@@ -1,5 +1,6 @@
 package me.projects.piccy.auth;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +16,22 @@ public class AuthController {
         this.authUserService = authUserService;
     }
 
-    @GetMapping("/register")
+    @GetMapping("/signup")
     public String showRegistrationForm() {
-        return "register.html";
+        return "forward:/html-pages/signup.html";
     }
 
-    @PostMapping("/register/save")
-    public String registerUser(@RequestBody MultiValueMap<String, String> userData) {
+    @PostMapping("/signup")
+    public ResponseEntity<String> registerUser(@RequestBody MultiValueMap<String, String> userData) {
         authUserService.register(
                 userData.get("username").getFirst(),
                 userData.get("password").getFirst()
         );
-        return "redirect:/login";
+        return ResponseEntity.ok("Request accepted");
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "forward:/html-pages/login.html";
     }
 }

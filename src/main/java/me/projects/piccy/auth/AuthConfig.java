@@ -2,7 +2,9 @@ package me.projects.piccy.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,11 +23,26 @@ public class AuthConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("register*", "register/save").permitAll()
+                        .requestMatchers("login*").permitAll()
+                        .requestMatchers("signup*").permitAll()
+                        .requestMatchers("html-pages/**").permitAll()
+                        .requestMatchers("Icons/*").permitAll()
+                        .requestMatchers("images/*").permitAll()
                         .requestMatchers("error").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(config -> config
+                        .loginPage("/login")
+                        .successHandler(
+                                (request, response, authentication) -> response.sendRedirect("/")
+                        )
+                        .failureHandler(
+                                (request, response, exception) -> {
+                                    if (exception instanceof BadCredentialsException) response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                                    else response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                                }
+                        )
+                )
                 .logout(Customizer.withDefaults())
                 .build();
     }
