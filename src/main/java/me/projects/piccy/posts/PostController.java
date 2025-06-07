@@ -37,12 +37,12 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostAndUserDTO> fetchPost(@PathVariable Long postId) {
-        return ResponseEntity.ok(postService.retrievePost(postId));
+    public ResponseEntity<PostAndUserDTO> fetchPost(@PathVariable Long postId, @AuthenticationPrincipal UserEntity userEntity) {
+        return ResponseEntity.ok(postService.retrievePost(postId, userEntity));
     }
 
     @GetMapping("/list")
-    ResponseEntity<List<PostAndUserDTO>> listPosts(@RequestParam Map<String, String> sortOrders) {
+    ResponseEntity<List<PostAndUserDTO>> listPosts(@RequestParam Map<String, String> sortOrders, @AuthenticationPrincipal UserEntity userEntity) {
         List<Sort.Order> orders = new ArrayList<>();
 
         for (var entry: sortOrders.entrySet()) {
@@ -61,7 +61,7 @@ public class PostController {
         }
 
         try {
-            return ResponseEntity.ok(postService.getPosts(Sort.by(orders)));
+            return ResponseEntity.ok(postService.getPosts(Sort.by(orders), userEntity));
         } catch (PropertyReferenceException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

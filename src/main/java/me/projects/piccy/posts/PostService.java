@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -38,11 +36,15 @@ public class PostService {
         return post;
     }
 
-    PostAndUserDTO retrievePost(Long postId) {
-        return  postRepository
+    PostAndUserDTO retrievePost(Long postId, UserEntity user) {
+        Post post = postRepository
                 .findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId))
-                .toDto();
+                .orElseThrow(() -> new PostNotFoundException(postId));
+
+        boolean likedByUser = user != null && postLikesRepository
+                .existsById(new PostLike(postId, user.getUserId()));
+
+        return post.toDto(likedByUser);
     }
 
     boolean togglePostLike(Long postId, UserEntity user) {
@@ -76,7 +78,26 @@ public class PostService {
         mediaService.deleteFile(uuid);
     }
 
-    List<PostAndUserDTO> getPosts(Sort sort) {
-        return postRepository.findAll(sort).stream().map(Post::toDto).toList();
+    List<PostAndUserDTO> getPosts(Sort sort, UserEntity user) {
+        Set<Long> userLikes;
+        if (user != null) {
+            List<Long> userLikesList = postLikesRepository
+                    .findByLikerId(user.getUserId())
+                    .stream()
+                    .map(PostLike::getPostId)
+                    .toList();
+            userLikes = new HashSet<>(userLikesList);
+        } else {
+            userLikes = null;
+        }
+
+        return postRepository
+                .findAll(sort)
+                .stream()
+                .map(post -> {
+                    boolean liked = userLikes != null && userLikes.contains(post.getId());
+                    return post.toDto(liked);
+                })
+                .toList();
     }
 }

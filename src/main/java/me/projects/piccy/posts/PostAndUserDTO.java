@@ -5,5 +5,13 @@ import me.projects.piccy.profile.UserProfileDTO;
 
 import java.time.Instant;
 
-public record PostAndUserDTO(Long postId, String title, String url, Instant createdAt, Long likes, UserProfileDTO creator) {
+public record PostAndUserDTO(
+        Long postId,
+        String title,
+        String url,
+        Instant createdAt,
+        Long likes,
+        Boolean likedByUser,
+        UserProfileDTO creator
+) {
 }

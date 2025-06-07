@@ -87,7 +87,15 @@ public class Post {
         return createdAt;
     }
 
-    public PostAndUserDTO toDto() {
-        return new PostAndUserDTO(id, title, url, createdAt.toInstant(), likes, creatorProfile.toDto());
+    public PostAndUserDTO toDto(Boolean likedByUser) {
+        return new PostAndUserDTO(
+                id,
+                title,
+                url,
+                createdAt.toInstant(),
+                likes,
+                likedByUser,
+                creatorProfile.toDto()
+        );
     }
 }

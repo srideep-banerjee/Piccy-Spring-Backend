@@ -27,6 +27,10 @@ public class PostLike implements Serializable {
 
     PostLike() {}
 
+    public Long getPostId() {
+        return postId;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
