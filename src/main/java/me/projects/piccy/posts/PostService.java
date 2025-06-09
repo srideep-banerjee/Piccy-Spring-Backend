@@ -30,7 +30,7 @@ public class PostService {
 
     Post createPost(String title, UserEntity user, MultipartFile inputFile) throws IOException, MediaException {
         UUID uuid = mediaService.saveFile(inputFile);
-        String url = mediaService.getUrlFromUUID(uuid);
+        String url = MediaService.getUrlFromUUID(uuid);
 
         Post post = new Post(title, user.getUserId(), url);
         post = postRepository.save(post);
@@ -76,7 +76,7 @@ public class PostService {
 
         postRepository.deleteById(postId);
 
-        UUID uuid = UUID.fromString(post.getUrl().substring(7));
+        UUID uuid = MediaService.getUUIDFromUrl(post.getUrl());
         mediaService.deleteFile(uuid);
     }
 
