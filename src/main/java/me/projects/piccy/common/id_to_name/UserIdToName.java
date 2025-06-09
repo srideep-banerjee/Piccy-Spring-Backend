@@ -12,13 +12,18 @@ public class UserIdToName {
     @Column(name = "user_id")
     private Long userId;
 
-    @NaturalId
+    @NaturalId(mutable = true)
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     UserIdToName() {}
 
     public UserIdToName(String username) {
+        this.username = username;
+    }
+
+    public UserIdToName(Long userId, String username) {
+        this.userId = userId;
         this.username = username;
     }
 
@@ -31,12 +36,10 @@ public class UserIdToName {
     }
 
     public void setUserId(Long userId) {
-        System.out.println("Set UserId = " + userId + " ---------------------------------------------");
         this.userId = userId;
     }
 
     public void setUsername(String username) {
-        System.out.println("Set Username = " + username + " ---------------------------------------------");
         this.username = username;
     }
 }
