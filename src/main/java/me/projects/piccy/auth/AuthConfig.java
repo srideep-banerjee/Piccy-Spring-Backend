@@ -24,8 +24,9 @@ public class AuthConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("api/posts/create", "api/posts/toggleLike/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "api/posts/*").authenticated()
+                        .requestMatchers("/api/posts/create", "/api/posts/toggleLike/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*").authenticated()
+                        .requestMatchers("/api/profile*").authenticated()
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(config -> config
