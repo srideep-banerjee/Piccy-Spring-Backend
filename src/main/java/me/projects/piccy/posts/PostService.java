@@ -10,6 +10,7 @@ import me.projects.piccy.posts.likes.PostLikesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -47,7 +48,8 @@ public class PostService {
         return post.toDto(likedByUser);
     }
 
-    boolean togglePostLike(Long postId, UserEntity user) {
+    @Transactional(rollbackFor = {PostNotFoundException.class})
+    protected boolean togglePostLike(Long postId, UserEntity user) {
         if (!postRepository.existsById(postId)) {
             throw new PostNotFoundException(postId);
         }
