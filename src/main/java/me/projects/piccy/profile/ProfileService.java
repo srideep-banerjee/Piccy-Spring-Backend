@@ -30,12 +30,17 @@ public class ProfileService {
     void updatePfp(UserEntity user, MultipartFile pfp) throws MediaException, IOException {
         Profile profile = profileRepository.findById(user.getUserId()).orElseThrow();
 
-        String pfpUrl = mediaService.getUrlFromUUID(mediaService.saveFile(pfp));
+        String oldPfp = profile.toDto().pfp();
+
+        String pfpUrl = MediaService.getUrlFromUUID(mediaService.saveFile(pfp));
 
         UserIdToName userIdToName = new UserIdToName(profile.getUserId(), user.getUsername());
         Profile updatedProfile = new Profile(userIdToName, pfpUrl);
 
         profileRepository.save(updatedProfile);
+
+        if (oldPfp != null)
+            mediaService.deleteFile(MediaService.getUUIDFromUrl(pfpUrl));
     }
 
     void updateUsername(UserEntity user, String username) {
