@@ -40,7 +40,7 @@ public class ProfileService {
         profileRepository.save(updatedProfile);
 
         if (oldPfp != null)
-            mediaService.deleteFile(MediaService.getUUIDFromUrl(pfpUrl));
+            mediaService.deleteFile(MediaService.getUUIDFromUrl(oldPfp));
     }
 
     void updateUsername(UserEntity user, String username) {
