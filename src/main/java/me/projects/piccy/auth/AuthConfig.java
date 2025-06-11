@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,7 +27,11 @@ public class AuthConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*").authenticated()
                         .requestMatchers("/api/profile*").authenticated()
                         .anyRequest().permitAll())
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(config -> config
+                        .authenticationEntryPoint(
+                                (request, response, authException) -> response.sendRedirect("/login")
+                        )
+                )
                 .formLogin(config -> config
                         .loginProcessingUrl("/api/login")
                         .loginPage("/login")
