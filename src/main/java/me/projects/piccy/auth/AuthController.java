@@ -2,10 +2,9 @@ package me.projects.piccy.auth;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 
 @Controller
 @RequestMapping(path = "/api")
@@ -18,10 +17,10 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody MultiValueMap<String, String> userData) {
+    public ResponseEntity<String> registerUser(@RequestPart String username, @RequestPart String password) {
         authUserService.register(
-                userData.get("username").getFirst(),
-                userData.get("password").getFirst()
+                username,
+                password
         );
         return ResponseEntity.ok("Request accepted");
     }
