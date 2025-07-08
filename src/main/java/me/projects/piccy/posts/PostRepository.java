@@ -26,4 +26,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Nonnull
     @EntityGraph(value = "Post.creator")
     List<Post> findAll(@Nonnull Sort sort);
+
+    @EntityGraph(value = "Post.creator")
+    List<Post> findByCreatorProfile_UserId(Long userId, Sort sort);
 }

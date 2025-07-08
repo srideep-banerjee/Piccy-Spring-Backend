@@ -70,6 +70,35 @@ public class PostController {
         }
     }
 
+    @GetMapping("/listSelf")
+    ResponseEntity<List<PostAndUserDTO>> listSelfPosts(@RequestParam Map<String, String> sortOrders, @AuthenticationPrincipal UserEntity userEntity) {
+        List<Sort.Order> orders = new ArrayList<>();
+
+        for (var entry: sortOrders.entrySet()) {
+            PostSortOrder postSortOrder;
+
+            try {
+                postSortOrder = PostSortOrder.valueOf(entry.getValue());
+            } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "query value must be ASC or DESC");
+            }
+
+            switch (postSortOrder) {
+                case ASC -> orders.add(Sort.Order.asc(entry.getKey()));
+                case DESC -> orders.add(Sort.Order.desc(entry.getKey()));
+            }
+        }
+
+        try {
+            return ResponseEntity.ok(postService.getSelfPosts(Sort.by(orders), userEntity));
+        } catch (PropertyReferenceException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Unknown property: " + e.getPropertyName()
+            );
+        }
+    }
+
     @PutMapping("/toggleLike/{postId}")
     public ResponseEntity<Boolean> toggleLike(@PathVariable Long postId, @AuthenticationPrincipal UserEntity userEntity) {
         return ResponseEntity.ok(postService.togglePostLike(postId, userEntity));

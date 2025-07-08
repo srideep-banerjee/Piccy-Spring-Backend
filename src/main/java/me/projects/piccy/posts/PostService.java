@@ -102,4 +102,19 @@ public class PostService {
                 })
                 .toList();
     }
+
+    List<PostAndUserDTO> getSelfPosts(Sort sort, UserEntity user) {
+        Set<Long> userLikes = new HashSet<>(postLikesRepository
+                .findByLikerId(user.getUserId())
+                .stream()
+                .map(PostLike::getPostId)
+                .toList()
+        );
+
+        return postRepository
+                .findByCreatorProfile_UserId(user.getUserId(), sort)
+                .stream()
+                .map(post -> post.toDto(userLikes.contains(post.getId())))
+                .toList();
+    }
 }

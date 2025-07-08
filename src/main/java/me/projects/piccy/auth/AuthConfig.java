@@ -23,7 +23,7 @@ public class AuthConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("/api/posts/create", "/api/posts/toggleLike/*").authenticated()
+                        .requestMatchers("/api/posts/create", "/api/posts/toggleLike/*", "/api/posts/listSelf").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*").authenticated()
                         .requestMatchers("/api/profile*").authenticated()
                         .anyRequest().permitAll())
